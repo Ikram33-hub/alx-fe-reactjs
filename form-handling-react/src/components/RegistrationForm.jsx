@@ -4,91 +4,58 @@ function RegistrationForm() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
-
-  // Function for validating single field while typing
-  const validateField = (name, value) => {
-    switch(name) {
-      case 'username':
-        if (!value) return 'Username مطلوب';
-        return '';
-      case 'email':
-        if (!value) return 'Email مطلوب';
-        // simple email regex
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) return 'Email غير صالح';
-        return '';
-      case 'password':
-        if (!value) return 'Password مطلوب';
-        if (value.length < 6) return 'Password قصير بزاف';
-        return '';
-      default:
-        return '';
-    }
-  };
+  const [errors, setErrors] = useState({}); // state for error messages
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // validate all fields on submit
-    const newErrors = {
-      username: validateField('username', username),
-      email: validateField('email', email),
-      password: validateField('password', password),
-    };
+    const newErrors = {};
+    if (!username) newErrors.username = "Username مطلوب";
+    if (!email) newErrors.email = "Email مطلوب";
+    if (!password) newErrors.password = "Password مطلوب";
 
     setErrors(newErrors);
 
-    // check if no errors
-    if (Object.values(newErrors).every(err => err === '')) {
+    if (Object.keys(newErrors).length === 0) {
       console.log({ username, email, password });
       alert('تم تسجيل المستخدم بنجاح!');
+      // Optionally, reset form
       setUsername('');
       setEmail('');
       setPassword('');
-      setErrors({});
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-            setErrors(prev => ({ ...prev, username: validateField('username', e.target.value) }));
-          }}
-          placeholder="Username"
+        <input 
+          type="text" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          placeholder="Username" 
         />
-        {errors.username && <div style={{ color: 'red' }}>{errors.username}</div>}
+        {errors.username && <div style={{color: 'red'}}>{errors.username}</div>}
       </div>
 
       <div>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setErrors(prev => ({ ...prev, email: validateField('email', e.target.value) }));
-          }}
-          placeholder="Email"
+        <input 
+          type="email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          placeholder="Email" 
         />
-        {errors.email && <div style={{ color: 'red' }}>{errors.email}</div>}
+        {errors.email && <div style={{color: 'red'}}>{errors.email}</div>}
       </div>
 
       <div>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            setErrors(prev => ({ ...prev, password: validateField('password', e.target.value) }));
-          }}
-          placeholder="Password"
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          placeholder="Password" 
         />
-        {errors.password && <div style={{ color: 'red' }}>{errors.password}</div>}
+        {errors.password && <div style={{color: 'red'}}>{errors.password}</div>}
       </div>
 
       <button type="submit">Register</button>
